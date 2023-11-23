@@ -8,41 +8,52 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    @State private var alertIsVisible: Bool = false
-    @State private var sliderValue: Double = 20.0
+
+    @ObservedObject var viewModel = GameViewModel()
     
     var body: some View {
-        VStack{
-            Text("Put the BullsEye as close as you can")
-                .bold()
-                .multilineTextAlignment(.center)
-                .lineSpacing(4.0)
-                .font(.footnote)
-                .kerning(2.0)
-            Text("89")
-                .font(.title)
-                .bold()
-            HStack{
-                Text("1")
-                    .bold()
-                Slider(value: $sliderValue, in: 1.0...100.0)
-                Text("100")
-                    .bold()
+        ZStack{
+            Color("BackgroundColor")
+                .ignoresSafeArea()
+            VStack{
+                HStack{
+                    Button{
+                        viewModel.isPopoverVisible.toggle()
+                    }
+                    label: {
+                        RoundedImageViewStroked(systemName: "list.dash")
+                    }
+                    .popover(isPresented: $viewModel.isPopoverVisible, content: {
+                        LeaderboardView(viewModel: viewModel)
+                    })
+                    Spacer()
+                    Button{
+                        viewModel.restartGame()
+                    } label: {
+                        RoundedImageViewFilled(systemName: "arrow.counterclockwise")
+                    }
+                    
+                }
+                .padding(.horizontal, 10.0)
+                Spacer()
+                TitleView(target: String(viewModel.target))
+                SliderView(viewModel: viewModel)
+                HitMeButton(viewModel: viewModel)
+                    .padding(.top, 20.0)
+                Spacer()
+                HStack{
+                    VStack{
+                        Text("Score")
+                        RoundedTextView(text: String(viewModel.score))
+                    }
+                    Spacer()
+                    VStack{
+                        Text("Round")
+                        RoundedTextView(text: String(viewModel.round))
+                    }
+                }
+                .padding([.leading, .bottom, .trailing], 20.0)
             }
-            .padding(.horizontal)
-            Button("Hit me"){
-                alertIsVisible = true
-            }
-            .alert("Hello there",
-                   isPresented: $alertIsVisible,
-                   actions: {
-                Button("Awesome"){}
-            },
-                   message: {
-                Text("Your number is \(Int(sliderValue))")
-            }
-            )
         }
     }
 }

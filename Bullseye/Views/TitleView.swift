@@ -8,11 +8,22 @@
 import SwiftUI
 
 struct TitleView: View {
+    
+    var target: String
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Put the BullsEye as close as you can")
+            .bold()
+            .multilineTextAlignment(.center)
+            .lineSpacing(4.0)
+            .font(.footnote)
+            .kerning(2.0)
+        Text(target)
+            .font(.title)
+            .bold()
     }
 }
 
 #Preview {
-    TitleView()
+    TitleView(target: "50")
 }
